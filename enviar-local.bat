@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 
 if not exist ".env" (
@@ -15,7 +15,7 @@ if not errorlevel 1 (
     py -3 -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 9) else 1)" >nul 2>&1
     if not errorlevel 1 (
         py -3 bot.py
-        set "EXIT_CODE=%ERRORLEVEL%"
+        set "EXIT_CODE=!ERRORLEVEL!"
         goto :finished
     )
 )
@@ -25,7 +25,7 @@ if not errorlevel 1 (
     python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 9) else 1)" >nul 2>&1
     if not errorlevel 1 (
         python bot.py
-        set "EXIT_CODE=%ERRORLEVEL%"
+        set "EXIT_CODE=!ERRORLEVEL!"
         goto :finished
     )
 )
