@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import html
+import argparse
 import json
 import os
 import smtplib
@@ -209,6 +210,15 @@ def send_email(message: EmailMessage) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Envía un resumen diario de estrenos de anime.")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="consulta AniList y muestra la vista previa sin conectarse al correo ni enviar mensajes",
+    )
+    args = parser.parse_args()
+
+    print("Paso 1/4: cargando configuración y validando zona horaria...", flush=True)
     load_dotenv()
     try:
         timezone_name = os.getenv("TIMEZONE", "America/Bogota").strip()
@@ -220,13 +230,28 @@ def main() -> int:
 
         now = datetime.now(timezone.utc)
         end = now + timedelta(hours=lookahead_hours)
+        print(
+            f"Paso 2/4: consultando AniList para las próximas {lookahead_hours} horas...",
+            flush=True,
+        )
         airings = fetch_airings(now, end)
         airings.sort(key=lambda item: (item.get("airingAt", 0), title_for(item).casefold()))
+        print(f"Paso 3/4: AniList devolvió {len(airings)} episodios.", flush=True)
         if not airings:
-            print(f"No hay episodios programados en las próximas {lookahead_hours} horas; no se envió correo.")
+            print("No hay episodios en esta ventana; no se envió correo.")
             return 0
 
         message = build_email(airings, timezone_name, now, end)
+        if args.dry_run:
+            plain_body = message.get_body(preferencelist=("plain",)).get_content()
+            print("Paso 4/4: vista previa lista. Modo de prueba activo: no se conectó al SMTP y no se envió correo.")
+            print(f"Asunto: {message['Subject']}\n")
+            print("----- VISTA PREVIA DEL CORREO -----")
+            print(plain_body)
+            print("----- FIN DE LA VISTA PREVIA -----")
+            return 0
+
+        print("Paso 4/4: conectando al servidor de correo y enviando el resumen...", flush=True)
         send_email(message)
         print(f"Correo enviado con {len(airings)} episodios.")
         return 0
