@@ -30,11 +30,12 @@ La programación usa GitHub Actions, y no requiere dejar un computador encendido
 
 ## Ejecutarlo en tu computador
 
-1. Copia `.env.example` como `.env` y completa sus valores.
-2. Usa Python 3.9 o posterior. No requiere instalar paquetes externos.
-3. Ejecuta `python bot.py` desde esta carpeta. En Windows puedes crear una tarea diaria en el Programador de tareas para que se ejecute a la hora que prefieras; el computador debe estar encendido y conectado.
+1. Instala Python 3.9 o posterior. El bot no requiere paquetes externos.
+2. Haz doble clic en `configurar-local.bat` y completa SMTP_USER, SMTP_PASSWORD y EMAIL_TO en el archivo que se abre.
+3. Haz doble clic en `probar-local.bat` para consultar AniList y ver una vista previa sin enviar correos.
+4. Cuando quieras mandar el resumen real, haz doble clic en `enviar-local.bat`.
 
-Para probarlo sin enviar correo ni configurar SMTP, ejecuta `python bot.py --dry-run`. El modo de prueba consulta AniList y muestra en pantalla el asunto y el contenido que prepararía.
+Para recibir el resumen automáticamente todos los días en tu computador, crea una tarea diaria en el Programador de tareas de Windows que ejecute `enviar-local.bat`. El computador debe estar encendido y conectado a Internet a la hora programada. Si prefieres no mantenerlo encendido, usa el workflow de GitHub Actions descrito arriba.
 
 ## Configuración
 
