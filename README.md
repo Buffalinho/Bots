@@ -34,6 +34,8 @@ La programación usa GitHub Actions, y no requiere dejar un computador encendido
 2. Usa Python 3.9 o posterior. No requiere instalar paquetes externos.
 3. Ejecuta `python bot.py` desde esta carpeta. En Windows puedes crear una tarea diaria en el Programador de tareas para que se ejecute a la hora que prefieras; el computador debe estar encendido y conectado.
 
+Para probarlo sin enviar correo ni configurar SMTP, ejecuta `python bot.py --dry-run`. El modo de prueba consulta AniList y muestra en pantalla el asunto y el contenido que prepararía.
+
 ## Configuración
 
 - `TIMEZONE`: zona horaria para mostrar las horas; por defecto `America/Bogota`.
